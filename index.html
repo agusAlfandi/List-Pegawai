@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>List Pegawai</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css"
+    />
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@4.12.14/dist/full.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script>
+      $(document).ready(function () {
+        $("#myTable").DataTable({
+          ajax: "./ajax/data/object_salary.txt",
+          columns: [
+            { data: "name" },
+            { data: "position" },
+            { data: "salary" },
+            { data: "start_date" },
+            { data: "office" },
+            { data: "extn" },
+          ],
+        });
+      });
+    </script>
+  </head>
+  <body class="p-4">
+    <div class="flex justify-center m-5">
+      <div class="collapse bg-base-200 max-w-7xl">
+        <input type="checkbox" />
+        <div class="collapse-title text-xl font-medium">Add New Employee</div>
+        <div class="collapse-content">
+          <form class="m-4">
+            <input
+              type="text"
+              id="name"
+              placeholder="Name"
+              class="input input-bordered m-2"
+              required
+            />
+            <input
+              type="text"
+              id="position"
+              placeholder="Position"
+              class="input input-bordered m-2"
+              required
+            />
+            <input
+              type="number"
+              id="salary"
+              placeholder="Salary"
+              class="input input-bordered m-2"
+              required
+            />
+            <input
+              type="date"
+              id="start_date"
+              placeholder="Start Date"
+              class="input input-bordered m-2"
+              required
+            />
+            <input
+              type="text"
+              id="office"
+              placeholder="Office"
+              class="input input-bordered m-2"
+              required
+            />
+            <input
+              type="number"
+              id="extn"
+              placeholder="Extension"
+              class="input input-bordered m-2"
+              required
+            />
+            <button class="btn btn-primary m-2" id="submitBtn">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <table id="myTable" class="display nowrap" style="width: 100%">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Position</th>
+          <th>Salary</th>
+          <th>Start date</th>
+          <th>Office</th>
+          <th>Progress</th>
+        </tr>
+      </thead>
+    </table>
+
+    <script>
+      $(document).ready(function () {
+        $("#submitBtn").click(function () {
+          const newEmployee = {
+            name: $("#name").val(),
+            position: $("#position").val(),
+            salary: $("#salary").val(),
+            start_date: $("#start_date").val(),
+            office: $("#office").val(),
+            extn: $("#extn").val(),
+          };
+          $.ajax({
+            url: "http://localhost:3000/addEmployee",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(newEmployee),
+            success: function (data) {
+              console.log(data);
+              $("#myTable").DataTable().ajax.reload();
+            },
+            error: function (error) {
+              console.log(error);
+            },
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
